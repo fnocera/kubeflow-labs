@@ -1,0 +1,50 @@
+apiVersion: kubeflow.org/v1beta2
+kind: TFJob
+metadata:
+  name: tfjobdist
+spec:
+  tfReplicaSpecs:
+    MASTER:
+      replicas: 1
+      template:
+        spec:
+          volumes:
+            - name: azurefile
+              persistentVolumeClaim:
+                claimName: azurefile
+          containers:
+            - image: fenocera/tf-mnist:distributedgpu
+              name: tensorflow
+              imagePullPolicy: Always
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+              volumeMounts:
+                - name: azurefile
+                  subPath: tfjobdist
+                  mountPath: /tmp/tensorflow
+          restartPolicy: OnFailure
+    WORKER:
+      replicas: 1
+      template:
+        spec:
+          containers:
+          - image: fenocera/tf-mnist:distributedgpu
+            name: tensorflow
+            imagePullPolicy: Always
+            resources:
+              limits:
+                nvidia.com/gpu: 1
+            volumeMounts:
+          restartPolicy: OnFailure
+    PS:
+      replicas: 1
+      template:
+        spec:
+          containers:
+          - image: fenocera/tf-mnist:distributed
+            name: tensorflow
+            imagePullPolicy: Always
+            ports:
+            - containerPort: 6006
+          restartPolicy: OnFailure

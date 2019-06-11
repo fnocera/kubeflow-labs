@@ -1,0 +1,29 @@
+apiVersion: 0.3.0
+environments:
+  azure:
+    destination:
+      namespace: serving
+      server: https://kubeflow-l-fenocerarg2-fb45cb-2e64e56f.hcp.eastus.azmk8s.io:443
+    k8sVersion: v1.12.7
+    path: azure
+  default:
+    destination:
+      namespace: default
+      server: https://kubeflow-l-fenocerarg2-fb45cb-2e64e56f.hcp.eastus.azmk8s.io:443
+    k8sVersion: v1.12.7
+    path: default
+kind: ksonnet.io/app
+libraries:
+  kubeflow/tf-serving:
+    name: tf-serving
+    registry: kubeflow
+    version: 74629b7b7e15aa27534ce91da22292df6242799c
+name: my-model-server
+registries:
+  incubator:
+    protocol: github
+    uri: github.com/ksonnet/parts/tree/master/incubator
+  kubeflow:
+    protocol: github
+    uri: github.com/kubeflow/kubeflow/tree/master/kubeflow
+version: 0.0.1

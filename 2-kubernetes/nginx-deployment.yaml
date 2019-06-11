@@ -1,0 +1,16 @@
+apiVersion: apps/v1beta2 # Kubernetes API version for the object
+kind: Deployment # The type of object described by this YAML, here a Deployment
+metadata:
+  name: nginx-deployment # Name of the deployment
+spec: # Actual specifications of this deployment
+  replicas: 3 # Number of replicas (instances) for this deployment. 1 replica = 1 pod
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec: # Specification for the Pod
+      containers: # These are the containers running inside our Pod, in our case a single one
+        - name: nginx # Name of this container
+          image: nginx:1.7.9 # Image to run
+          ports: # Ports to expose
+            - containerPort: 80

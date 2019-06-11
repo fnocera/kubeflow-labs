@@ -1,0 +1,25 @@
+apiVersion: kubeflow.org/v1beta2
+kind: TFJob
+metadata:
+  name: tfjob
+spec:
+  tfReplicaSpecs:
+    MASTER:
+      replicas: 1
+      template:
+        spec:
+          containers:
+            - image: fenocera/tf-mnist:cpu # From module 1 if want gpu use wbuchwalter/tf-mnist:gpu
+              name: tensorflow
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+              volumeMounts:
+                - name: azurefile
+                  subPath: tfjob
+                  mountPath: /tmp/tensorflow
+          volumes:
+            - name: azurefile
+              persistentVolumeClaim:
+                claimName: azurefile
+          restartPolicy: OnFailure
